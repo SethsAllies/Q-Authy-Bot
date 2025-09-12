@@ -9,7 +9,7 @@
 
 import 'dotenv/config';
 import { Client, GatewayIntentBits, Partials, PermissionsBitField, REST, Routes, SlashCommandBuilder, ChannelType } from 'discord.js';
-import { OpenAIApi, Configuration } from 'openai';
+import OpenAI from 'openai';
 import fetch from 'node-fetch';
 
 const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
@@ -29,8 +29,7 @@ const client = new Client({
 
 let openai = null;
 if (OPENAI_API_KEY) {
-  const configuration = new Configuration({ apiKey: OPENAI_API_KEY });
-  openai = new OpenAIApi(configuration);
+  openai = new OpenAI({ apiKey: OPENAI_API_KEY });
 }
 
 /**
@@ -105,14 +104,14 @@ Create a reasonable server blueprint from the following idea: "${idea}"
 Make categories and 4-12 channels total typically. Use short kebab-case channel names. Keep JSON strictly valid.
     `;
     try {
-      const res = await openai.createChatCompletion({
+      const res = await openai.chat.completions.create({
         model: 'gpt-4o-mini',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.2,
         max_tokens: 800,
       });
       // find assistant text
-      const text = res?.data?.choices?.[0]?.message?.content;
+      const text = res?.choices?.[0]?.message?.content;
       // Try to extract JSON substring
       const start = text.indexOf('{');
       const end = text.lastIndexOf('}');
