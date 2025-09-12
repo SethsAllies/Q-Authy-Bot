@@ -44,24 +44,34 @@ async function loadCommands() {
     // Load commands from folder
     try {
       const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+      let loadedCount = 0;
       
       for (const file of commandFiles) {
-        const filePath = path.join(commandsPath, file);
-        const command = await import(`file://${filePath}`);
-        
-        if (command.default && command.default.name) {
-          client.commands.set(command.default.name, command.default);
+        try {
+          const filePath = path.join(commandsPath, file);
+          const command = await import(`file://${filePath}`);
           
-          // Set aliases
-          if (command.default.aliases) {
-            command.default.aliases.forEach(alias => {
-              client.aliases.set(alias, command.default.name);
-            });
+          if (command.default && command.default.name) {
+            client.commands.set(command.default.name, command.default);
+            
+            // Set aliases
+            if (command.default.aliases) {
+              command.default.aliases.forEach(alias => {
+                client.aliases.set(alias, command.default.name);
+              });
+            }
+            
+            console.log(`✅ Loaded command: ${command.default.name}`);
+            loadedCount++;
+          } else {
+            console.log(`❌ Invalid command structure in ${file}`);
           }
-          
-          console.log(`✅ Loaded command: ${command.default.name}`);
+        } catch (error) {
+          console.log(`❌ Failed to load ${file}: ${error.message}`);
         }
       }
+      
+      console.log(`📁 ${folder}: ${loadedCount}/${commandFiles.length} commands loaded`);
     } catch (error) {
       console.log(`📁 Created commands/${folder} folder`);
     }
