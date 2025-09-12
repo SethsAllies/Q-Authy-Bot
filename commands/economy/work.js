@@ -26,8 +26,8 @@ export default {
     const job = jobs[Math.floor(Math.random() * jobs.length)];
     const earnings = Math.floor(Math.random() * (job.max - job.min + 1)) + job.min;
     
-    const balance = await client.database.getUserBalance(userId);
-    await client.database.updateBalance(userId, balance.wallet + earnings, null);
+    // Update balance atomically
+    await client.database.updateBalance(userId, earnings, null, 'increment');
     await client.database.setCooldown(userId, 'work', 60 * 60 * 1000); // 1 hour
     await client.database.addTransaction(userId, earnings, 'work', `Worked as ${job.name}`);
     

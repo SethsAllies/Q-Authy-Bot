@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { Client, GatewayIntentBits, Partials, Collection } from 'discord.js';
+import { Client, GatewayIntentBits, Partials, Collection, REST, Routes } from 'discord.js';
 import fs from 'fs';
 import path from 'path';
 import database from './services/database.js';
@@ -21,6 +21,7 @@ const client = new Client({
 client.commands = new Collection();
 client.aliases = new Collection();
 client.cooldowns = new Collection();
+client.slashCommands = new Collection();
 
 // Database and economy (replace in-memory map)
 client.database = database;
@@ -36,6 +37,7 @@ client.config = {
 // Command loader function
 async function loadCommands() {
   const commandFolders = ['moderation', 'fun', 'economy', 'music', 'utility', 'ai'];
+  const slashCommandsArray = [];
   
   for (const folder of commandFolders) {
     const commandsPath = path.join(process.cwd(), 'commands', folder);
@@ -56,15 +58,30 @@ async function loadCommands() {
           const command = await import(`file://${filePath}`);
           
           if (command.default && command.default.name) {
+            // Store both prefix and slash commands
             client.commands.set(command.default.name, command.default);
+            client.slashCommands.set(command.default.name, command.default);
             
-            // Set aliases
+            // Set aliases for prefix commands
             if (command.default.aliases) {
               command.default.aliases.forEach(alias => {
                 client.aliases.set(alias, command.default.name);
               });
             }
             
+            // Prepare slash command data (with deduplication)
+            const slashData = {
+              name: command.default.name,
+              description: command.default.description || 'No description provided',
+              options: command.default.options || []
+            };
+            
+            // Check for duplicates before adding
+            if (!slashCommandsArray.find(cmd => cmd.name === slashData.name)) {
+              slashCommandsArray.push(slashData);
+            } else {
+              console.log(`⚠️ Skipping duplicate slash command: ${slashData.name}`);
+            }
             console.log(`✅ Loaded command: ${command.default.name}`);
             loadedCount++;
           } else {
@@ -80,6 +97,9 @@ async function loadCommands() {
       console.log(`📁 Created commands/${folder} folder`);
     }
   }
+  
+  // Register slash commands
+  await registerSlashCommands(slashCommandsArray);
 }
 
 // Message handler
@@ -125,6 +145,25 @@ client.on('messageCreate', async message => {
   }
 });
 
+// Slash command registration
+async function registerSlashCommands(commands) {
+  const rest = new REST({ version: '10' }).setToken(client.config.token);
+  
+  try {
+    console.log(`🔄 Registering ${commands.length} slash commands...`);
+    
+    // Register commands globally (takes up to 1 hour)
+    await rest.put(
+      Routes.applicationCommands(client.user.id),
+      { body: commands }
+    );
+    
+    console.log(`✅ Successfully registered ${commands.length} slash commands globally!`);
+  } catch (error) {
+    console.error('❌ Error registering slash commands:', error);
+  }
+}
+
 // Ready event
 client.once('ready', async () => {
   console.log(`🚀 ${client.user.tag} is online!`);
@@ -139,7 +178,86 @@ client.once('ready', async () => {
   console.log(`✨ Mega Discord Bot is ready with ${client.commands.size} commands!`);
   
   // Set bot status
-  client.user.setActivity('535+ commands | !help', { type: 3 }); // 3 = WATCHING
+  client.user.setActivity('535+ commands | /help or !help', { type: 3 }); // 3 = WATCHING
+});
+
+// Slash command interaction handler
+client.on('interactionCreate', async interaction => {
+  if (!interaction.isChatInputCommand()) return;
+  
+  const command = client.slashCommands.get(interaction.commandName);
+  if (!command) return;
+  
+  // Check cooldowns
+  if (!client.cooldowns.has(command.name)) {
+    client.cooldowns.set(command.name, new Collection());
+  }
+  
+  const now = Date.now();
+  const timestamps = client.cooldowns.get(command.name);
+  const cooldownAmount = (command.cooldown || 3) * 1000;
+  
+  if (timestamps.has(interaction.user.id)) {
+    const expirationTime = timestamps.get(interaction.user.id) + cooldownAmount;
+    
+    if (now < expirationTime) {
+      const timeLeft = (expirationTime - now) / 1000;
+      return interaction.reply({ 
+        content: `Please wait ${timeLeft.toFixed(1)} more seconds before using \`${command.name}\` again.`,
+        ephemeral: true 
+      });
+    }
+  }
+  
+  timestamps.set(interaction.user.id, now);
+  setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount);
+  
+  // Execute command
+  try {
+    // Convert interaction to message-like object for compatibility
+    const fakeMessage = {
+      author: interaction.user,
+      member: interaction.member,
+      guild: interaction.guild,
+      channel: interaction.channel,
+      mentions: {
+        users: new Collection(),
+        members: new Collection(),
+        roles: new Collection()
+      },
+      reply: async (content) => {
+        if (typeof content === 'string') {
+          return interaction.reply({ content, ephemeral: false });
+        }
+        return interaction.reply({ ...content, ephemeral: false });
+      }
+    };
+    
+    // Parse options as args
+    const args = [];
+    if (interaction.options) {
+      interaction.options.data.forEach(option => {
+        if (option.type === 6) { // USER
+          fakeMessage.mentions.users.set(option.value, option.user);
+          fakeMessage.mentions.members.set(option.value, option.member);
+          args.push(`<@${option.value}>`);
+        } else {
+          args.push(option.value.toString());
+        }
+      });
+    }
+    
+    await command.execute(fakeMessage, args, client);
+  } catch (error) {
+    console.error(`Error executing slash command ${command.name}:`, error);
+    const errorReply = { content: 'There was an error executing this command!', ephemeral: true };
+    
+    if (interaction.replied || interaction.deferred) {
+      await interaction.followUp(errorReply);
+    } else {
+      await interaction.reply(errorReply);
+    }
+  }
 });
 
 // Error handling

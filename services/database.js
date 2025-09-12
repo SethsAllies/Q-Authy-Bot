@@ -62,8 +62,8 @@ class DatabaseService {
       data
     });
     
-    // Update cache
-    this.cache.set(`user_${userId}`, user);
+    // Invalidate cache to ensure consistency
+    this.cache.delete(`user_${userId}`);
     return user;
   }
 
@@ -73,51 +73,95 @@ class DatabaseService {
     return { wallet: user.wallet, bank: user.bank };
   }
 
-  async updateBalance(userId, wallet = null, bank = null) {
+  async updateBalance(userId, walletAmount = null, bankAmount = null, operation = 'set') {
     const updateData = {};
-    if (wallet !== null) updateData.wallet = wallet;
-    if (bank !== null) updateData.bank = bank;
     
-    return await this.updateUser(userId, updateData);
+    if (walletAmount !== null) {
+      if (operation === 'increment') {
+        updateData.wallet = { increment: walletAmount };
+      } else if (operation === 'decrement') {
+        updateData.wallet = { decrement: walletAmount };
+      } else {
+        updateData.wallet = walletAmount;
+      }
+    }
+    
+    if (bankAmount !== null) {
+      if (operation === 'increment') {
+        updateData.bank = { increment: bankAmount };
+      } else if (operation === 'decrement') {
+        updateData.bank = { decrement: bankAmount };
+      } else {
+        updateData.bank = bankAmount;
+      }
+    }
+    
+    const user = await this.prisma.user.update({
+      where: { id: userId },
+      data: updateData
+    });
+    
+    // Invalidate cache
+    this.cache.delete(`user_${userId}`);
+    return user;
   }
 
   async transferMoney(fromUserId, toUserId, amount) {
     return await this.prisma.$transaction(async (prisma) => {
-      const fromUser = await this.getUser(fromUserId);
-      const toUser = await this.getUser(toUserId);
-
-      if (fromUser.wallet < amount) {
+      // Create users if they don't exist within transaction
+      await prisma.user.upsert({
+        where: { id: fromUserId },
+        update: {},
+        create: { id: fromUserId, username: 'Unknown' }
+      });
+      
+      await prisma.user.upsert({
+        where: { id: toUserId },
+        update: {},
+        create: { id: toUserId, username: 'Unknown' }
+      });
+      
+      // Get current balance within transaction
+      const fromUser = await prisma.user.findUnique({
+        where: { id: fromUserId }
+      });
+      
+      if (!fromUser || fromUser.wallet < amount) {
         throw new Error('Insufficient funds');
       }
 
+      // Atomic updates
       await prisma.user.update({
         where: { id: fromUserId },
-        data: { wallet: fromUser.wallet - amount }
+        data: { wallet: { decrement: amount } }
       });
 
       await prisma.user.update({
         where: { id: toUserId },
-        data: { wallet: toUser.wallet + amount }
+        data: { wallet: { increment: amount } }
       });
 
-      // Log transaction
-      await prisma.transaction.create({
-        data: {
-          userId: fromUserId,
-          amount: -amount,
-          type: 'transfer',
-          details: `Transfer to ${toUserId}`
-        }
+      // Log transactions
+      await prisma.transaction.createMany({
+        data: [
+          {
+            userId: fromUserId,
+            amount: -amount,
+            type: 'transfer',
+            details: `Transfer to ${toUserId}`
+          },
+          {
+            userId: toUserId,
+            amount: amount,
+            type: 'transfer',
+            details: `Transfer from ${fromUserId}`
+          }
+        ]
       });
-
-      await prisma.transaction.create({
-        data: {
-          userId: toUserId,
-          amount: amount,
-          type: 'transfer',
-          details: `Transfer from ${fromUserId}`
-        }
-      });
+      
+      // Invalidate cache
+      this.cache.delete(`user_${fromUserId}`);
+      this.cache.delete(`user_${toUserId}`);
     });
   }
 

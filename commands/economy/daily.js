@@ -16,10 +16,9 @@ export default {
     }
     
     const reward = Math.floor(Math.random() * 500) + 100; // 100-600
-    const balance = await client.database.getUserBalance(userId);
     
-    // Update balance and set cooldown
-    await client.database.updateBalance(userId, balance.wallet + reward, null);
+    // Update balance and set cooldown atomically
+    await client.database.updateBalance(userId, reward, null, 'increment');
     await client.database.setCooldown(userId, 'daily', 24 * 60 * 60 * 1000); // 24 hours
     await client.database.addTransaction(userId, reward, 'daily', 'Daily reward');
     
