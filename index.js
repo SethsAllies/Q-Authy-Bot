@@ -281,7 +281,7 @@ client.on('interactionCreate', async interaction => {
       
       const embed = new EmbedBuilder()
         .setColor(0x0099ff)
-        .setTitle('🤖 Mega Discord Bot - 540+ Commands!')
+        .setTitle('Q-Mod - 100+ Commands!')
         .setDescription(`Welcome to the ultimate Discord bot with **${totalCommands}** commands across 6 categories!\n\n**Prefix Commands:** Use \`!\` before command names\n**Slash Commands:** Use \`/\` before command names\n\nClick the buttons below to explore commands by category!`)
         .addFields(
           { name: '🛡️ Moderation & Admin', value: 'Ban, kick, mute, warnings, automod, roles, and server management!', inline: true },
