@@ -178,7 +178,7 @@ client.once('ready', async () => {
   console.log(`✨ Mega Discord Bot is ready with ${client.commands.size} commands!`);
   
   // Set bot status
-  client.user.setActivity('535+ commands | /help or !help', { type: 3 }); // 3 = WATCHING
+  client.user.setActivity('/help or !help', { type: 2 }); // 2 = LISTENING
 });
 
 // Slash command interaction handler
