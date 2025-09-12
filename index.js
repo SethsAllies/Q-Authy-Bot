@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { Client, GatewayIntentBits, Partials, Collection } from 'discord.js';
 import fs from 'fs';
 import path from 'path';
+import database from './services/database.js';
 
 const client = new Client({
   intents: [
@@ -20,6 +21,9 @@ const client = new Client({
 client.commands = new Collection();
 client.aliases = new Collection();
 client.cooldowns = new Collection();
+
+// Database and economy (replace in-memory map)
+client.database = database;
 
 // Bot configuration
 client.config = {
@@ -125,6 +129,9 @@ client.on('messageCreate', async message => {
 client.once('ready', async () => {
   console.log(`🚀 ${client.user.tag} is online!`);
   console.log(`📊 Serving ${client.guilds.cache.size} servers with ${client.users.cache.size} users`);
+  
+  // Initialize database
+  await database.init();
   
   // Load commands
   await loadCommands();

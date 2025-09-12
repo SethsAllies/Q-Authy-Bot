@@ -5,10 +5,14 @@ export default {
   usage: '!work [job]',
   cooldown: 60,
   async execute(message, args, client) {
-    if (!client.economy) client.economy = new Map();
-    
     const userId = message.author.id;
-    const userData = client.economy.get(userId) || { wallet: 1000, bank: 0 };
+    
+    // Check cooldown
+    const cooldownMs = await client.database.checkCooldown(userId, 'work');
+    if (cooldownMs > 0) {
+      const minutes = Math.floor(cooldownMs / (60 * 1000));
+      return message.reply(`⏰ You need to wait ${minutes} more minutes before working again!`);
+    }
     
     const jobs = [
       { name: 'programmer', min: 200, max: 500 },
@@ -22,8 +26,10 @@ export default {
     const job = jobs[Math.floor(Math.random() * jobs.length)];
     const earnings = Math.floor(Math.random() * (job.max - job.min + 1)) + job.min;
     
-    userData.wallet += earnings;
-    client.economy.set(userId, userData);
+    const balance = await client.database.getUserBalance(userId);
+    await client.database.updateBalance(userId, balance.wallet + earnings, null);
+    await client.database.setCooldown(userId, 'work', 60 * 60 * 1000); // 1 hour
+    await client.database.addTransaction(userId, earnings, 'work', `Worked as ${job.name}`);
     
     message.reply(`💼 You worked as a **${job.name}** and earned **$${earnings}**!`);
   }

@@ -1,0 +1,152 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id       String @id
+  username String
+  
+  // Economy
+  wallet   Int @default(1000)
+  bank     Int @default(0)
+  
+  // Levels
+  xp       Int @default(0)
+  level    Int @default(1)
+  
+  // Cooldowns
+  workCooldown   DateTime?
+  dailyCooldown  DateTime?
+  crimeCooldown  DateTime?
+  
+  // Relations
+  transactions Transaction[]
+  warnings     Warning[]
+  reminders    Reminder[]
+  inventory    InventoryItem[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Guild {
+  id   String @id
+  name String
+  
+  // Settings
+  prefix          String @default("!")
+  modRole         String?
+  adminRole       String?
+  muteRole        String?
+  welcomeChannel  String?
+  logChannel      String?
+  automod         Boolean @default(false)
+  
+  // Relations
+  warnings      Warning[]
+  auditLogs     AuditLog[]
+  guildSettings GuildSettings[]
+  reminders     Reminder[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Transaction {
+  id       Int    @id @default(autoincrement())
+  userId   String
+  amount   Int
+  type     String // work, daily, crime, gambling, pay, etc
+  details  String?
+  
+  user User @relation(fields: [userId], references: [id])
+  
+  createdAt DateTime @default(now())
+}
+
+model Warning {
+  id       Int    @id @default(autoincrement())
+  userId   String
+  guildId  String
+  reason   String
+  moderator String
+  active   Boolean @default(true)
+  
+  user  User  @relation(fields: [userId], references: [id])
+  guild Guild @relation(fields: [guildId], references: [id])
+  
+  createdAt DateTime @default(now())
+}
+
+model AuditLog {
+  id      Int    @id @default(autoincrement())
+  guildId String
+  action  String
+  target  String
+  moderator String
+  reason  String?
+  details String?
+  
+  guild Guild @relation(fields: [guildId], references: [id])
+  
+  createdAt DateTime @default(now())
+}
+
+model Reminder {
+  id      Int      @id @default(autoincrement())
+  userId  String
+  guildId String?
+  content String
+  time    DateTime
+  active  Boolean  @default(true)
+  
+  user  User   @relation(fields: [userId], references: [id])
+  guild Guild? @relation(fields: [guildId], references: [id])
+  
+  createdAt DateTime @default(now())
+}
+
+model Item {
+  id          Int    @id @default(autoincrement())
+  name        String @unique
+  description String
+  price       Int
+  emoji       String?
+  category    String
+  usable      Boolean @default(false)
+  
+  inventory InventoryItem[]
+  
+  createdAt DateTime @default(now())
+}
+
+model InventoryItem {
+  id       Int    @id @default(autoincrement())
+  userId   String
+  itemId   Int
+  quantity Int    @default(1)
+  
+  user User @relation(fields: [userId], references: [id])
+  item Item @relation(fields: [itemId], references: [id])
+  
+  @@unique([userId, itemId])
+}
+
+model GuildSettings {
+  id      Int    @id @default(autoincrement())
+  guildId String
+  key     String
+  value   String
+  
+  guild Guild @relation(fields: [guildId], references: [id])
+  
+  @@unique([guildId, key])
+}

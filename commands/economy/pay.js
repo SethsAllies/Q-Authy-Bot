@@ -5,8 +5,6 @@ export default {
   usage: '!pay @user [amount]',
   cooldown: 3,
   async execute(message, args, client) {
-    if (!client.economy) client.economy = new Map();
-    
     const target = message.mentions.users.first();
     if (!target) {
       return message.reply('❌ Please mention a user to pay!');
@@ -24,19 +22,17 @@ export default {
     const userId = message.author.id;
     const targetId = target.id;
     
-    const userData = client.economy.get(userId) || { wallet: 1000, bank: 0 };
-    const targetData = client.economy.get(targetId) || { wallet: 1000, bank: 0 };
+    const balance = await client.database.getUserBalance(userId);
     
-    if (userData.wallet < amount) {
+    if (balance.wallet < amount) {
       return message.reply('❌ You don\'t have enough money!');
     }
     
-    userData.wallet -= amount;
-    targetData.wallet += amount;
-    
-    client.economy.set(userId, userData);
-    client.economy.set(targetId, targetData);
-    
-    message.reply(`💸 You paid **$${amount}** to **${target.username}**!`);
+    try {
+      await client.database.transferMoney(userId, targetId, amount);
+      message.reply(`💸 You paid **$${amount}** to **${target.username}**!`);
+    } catch (error) {
+      message.reply('❌ Transfer failed! Please try again.');
+    }
   }
 };
