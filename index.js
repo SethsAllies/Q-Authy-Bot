@@ -3,6 +3,7 @@ import { Client, GatewayIntentBits, Partials, Collection, REST, Routes } from 'd
 import fs from 'fs';
 import path from 'path';
 import database from './services/database.js';
+import AutoModService from './services/automod.js';
 
 const client = new Client({
   intents: [
@@ -12,7 +13,9 @@ const client = new Client({
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildVoiceStates,
     GatewayIntentBits.GuildMessageReactions,
-    GatewayIntentBits.DirectMessages
+    GatewayIntentBits.DirectMessages,
+    GatewayIntentBits.AutoModerationConfiguration,
+    GatewayIntentBits.AutoModerationExecution
   ],
   partials: [Partials.Channel, Partials.Message, Partials.User]
 });
@@ -25,6 +28,9 @@ client.slashCommands = new Collection();
 
 // Database and economy (replace in-memory map)
 client.database = database;
+
+// AutoMod service
+client.automod = new AutoModService(client);
 
 // Bot configuration
 client.config = {
@@ -374,6 +380,36 @@ client.on('interactionCreate', async interaction => {
     
     await interaction.update({ embeds: [embed] });
   }
+});
+
+// AutoMod Event Handlers
+client.on('autoModerationActionExecution', async (execution) => {
+  console.log(`🛡️ AutoMod blocked message from ${execution.user.tag} in ${execution.guild.name}`);
+  console.log(`Rule: ${execution.ruleTriggerType} | Matched: "${execution.matchedKeyword || execution.matchedContent}"`);
+  
+  // Optional: Add to audit log or database
+  try {
+    await client.database.addTransaction(
+      execution.user.id,
+      0,
+      'automod_block',
+      `AutoMod blocked message: ${execution.ruleTriggerType}`
+    );
+  } catch (error) {
+    console.error('Failed to log AutoMod action:', error);
+  }
+});
+
+client.on('autoModerationRuleCreate', (rule) => {
+  console.log(`✅ AutoMod rule created: "${rule.name}" in ${rule.guild.name}`);
+});
+
+client.on('autoModerationRuleDelete', (rule) => {
+  console.log(`🗑️ AutoMod rule deleted: "${rule.name}" in ${rule.guild.name}`);
+});
+
+client.on('autoModerationRuleUpdate', (oldRule, newRule) => {
+  console.log(`🔄 AutoMod rule updated: "${newRule.name}" in ${newRule.guild.name}`);
 });
 
 // Error handling
