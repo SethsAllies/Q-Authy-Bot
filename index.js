@@ -347,7 +347,7 @@ client.on('messageCreate', async (msg) => {
   }
 });
 
-client.once('ready', async () => {
+client.once('clientReady', async () => {
   console.log(`Logged in as ${client.user.tag}`);
   await registerSlash();
 });
