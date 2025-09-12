@@ -260,6 +260,122 @@ client.on('interactionCreate', async interaction => {
   }
 });
 
+// Button interaction handler for help categories  
+client.on('interactionCreate', async interaction => {
+  if (!interaction.isChatInputCommand() && !interaction.isButton()) return;
+  
+  // Handle chat input commands (already handled above)
+  if (interaction.isChatInputCommand()) return;
+  
+  // Handle button interactions
+  if (!interaction.isButton()) return;
+  
+  const { EmbedBuilder } = await import('discord.js');
+  
+  if (interaction.customId.startsWith('help_')) {
+    const category = interaction.customId.split('_')[1];
+    
+    if (category === 'home') {
+      // Return to main help page
+      const totalCommands = client.commands.size;
+      
+      const embed = new EmbedBuilder()
+        .setColor(0x0099ff)
+        .setTitle('🤖 Mega Discord Bot - 540+ Commands!')
+        .setDescription(`Welcome to the ultimate Discord bot with **${totalCommands}** commands across 6 categories!\n\n**Prefix Commands:** Use \`!\` before command names\n**Slash Commands:** Use \`/\` before command names\n\nClick the buttons below to explore commands by category!`)
+        .addFields(
+          { name: '🛡️ Moderation & Admin', value: 'Ban, kick, mute, warnings, automod, roles, and server management!', inline: true },
+          { name: '🎮 Fun & Games', value: 'Games, memes, reactions, rates, trivia, entertainment, and social fun!', inline: true },
+          { name: '💰 Economy & Levels', value: 'Work, gambling, shop, inventory, leaderboards, and financial systems!', inline: true },
+          { name: '🎶 Music', value: 'Play, pause, queue, volume, playlists, effects, and audio controls!', inline: true },
+          { name: '🛠️ Utility', value: 'Weather, translate, reminders, polls, converters, and productivity tools!', inline: true },
+          { name: '🤖 AI & Media', value: 'ChatGPT, image generation, analysis, AI tools, and media processing!', inline: true }
+        )
+        .setFooter({ text: 'Click a category button to see all commands in that category!' })
+        .setTimestamp();
+      
+      return interaction.update({ embeds: [embed] });
+    }
+    
+    // Get commands for specific category
+    let categoryCommands = [];
+    let categoryName = '';
+    let categoryEmoji = '';
+    
+    switch (category) {
+      case 'moderation':
+        categoryCommands = Array.from(client.commands.values()).filter(cmd => cmd.category === 'moderation');
+        categoryName = 'Moderation & Admin';
+        categoryEmoji = '🛡️';
+        break;
+      case 'fun':
+        categoryCommands = Array.from(client.commands.values()).filter(cmd => cmd.category === 'fun');
+        categoryName = 'Fun & Games';
+        categoryEmoji = '🎮';
+        break;
+      case 'economy':
+        categoryCommands = Array.from(client.commands.values()).filter(cmd => cmd.category === 'economy');
+        categoryName = 'Economy & Levels';
+        categoryEmoji = '💰';
+        break;
+      case 'music':
+        categoryCommands = Array.from(client.commands.values()).filter(cmd => cmd.category === 'music');
+        categoryName = 'Music';
+        categoryEmoji = '🎶';
+        break;
+      case 'utility':
+        categoryCommands = Array.from(client.commands.values()).filter(cmd => cmd.category === 'utility');
+        categoryName = 'Utility';
+        categoryEmoji = '🛠️';
+        break;
+      case 'ai':
+        categoryCommands = Array.from(client.commands.values()).filter(cmd => cmd.category === 'ai');
+        categoryName = 'AI & Media';
+        categoryEmoji = '🤖';
+        break;
+      case 'all':
+        categoryCommands = Array.from(client.commands.values());
+        categoryName = 'All Commands';
+        categoryEmoji = '📝';
+        break;
+      default:
+        return interaction.reply({ content: '❌ Unknown category!', ephemeral: true });
+    }
+    
+    // Create command list embed
+    const commandList = categoryCommands
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map(cmd => `\`${cmd.name}\` - ${cmd.description || 'No description'}`)
+      .join('\n');
+    
+    const chunks = [];
+    const maxLength = 4000;
+    
+    if (commandList.length > maxLength) {
+      // Split into multiple embeds if too long
+      const commands = categoryCommands.sort((a, b) => a.name.localeCompare(b.name));
+      const commandsPerPage = 20;
+      
+      for (let i = 0; i < commands.length; i += commandsPerPage) {
+        const pageCommands = commands.slice(i, i + commandsPerPage);
+        const pageList = pageCommands.map(cmd => `\`${cmd.name}\` - ${cmd.description || 'No description'}`).join('\n');
+        chunks.push(pageList);
+      }
+    } else {
+      chunks.push(commandList);
+    }
+    
+    const embed = new EmbedBuilder()
+      .setColor(0x0099ff)
+      .setTitle(`${categoryEmoji} ${categoryName} Commands`)
+      .setDescription(chunks[0] || 'No commands found in this category.')
+      .setFooter({ text: `${categoryCommands.length} commands in this category | Use !help [command] for details` })
+      .setTimestamp();
+    
+    await interaction.update({ embeds: [embed] });
+  }
+});
+
 // Error handling
 process.on('unhandledRejection', error => {
   console.error('Unhandled promise rejection:', error);
