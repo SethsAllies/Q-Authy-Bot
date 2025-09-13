@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - LyBotic Discord Bot</title>
+    <meta name="description" content="Manage your Discord server with LyBotic's web dashboard. Configure commands, moderation, AutoMod, and more.">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <img src="assets/logo.png" alt="LyBotic Logo" class="nav-logo">
+                <span class="nav-title">LyBotic</span>
+            </div>
+            
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="index.html#features" class="nav-link">Features</a>
+                <a href="commands.html" class="nav-link">Commands</a>
+                <a href="dashboard.html" class="nav-link active">Dashboard</a>
+                <a href="support.html" class="nav-link">Support</a>
+                <a href="docs.html" class="nav-link">Docs</a>
+            </div>
+            
+            <div class="nav-actions">
+                <div class="user-menu" id="user-menu" style="display: none;">
+                    <img src="" alt="User Avatar" class="user-avatar" id="user-avatar">
+                    <span class="user-name" id="user-name"></span>
+                    <div class="dropdown-menu" id="user-dropdown">
+                        <a href="#" class="dropdown-item" id="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+                <a href="https://discord.com/oauth2/authorize?client_id=YOUR_BOT_ID&permissions=8&scope=bot%20applications.commands" class="btn btn-primary" target="_blank">
+                    <i class="fab fa-discord"></i> Add to Server
+                </a>
+                <div class="nav-toggle" id="nav-toggle">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <main class="dashboard-main">
+        <!-- Login Section -->
+        <section class="login-section" id="login-section">
+            <div class="container">
+                <div class="login-card">
+                    <div class="login-header">
+                        <h1>Server Dashboard</h1>
+                        <p>Login with Discord to manage your servers</p>
+                    </div>
+                    
+                    <div class="login-content">
+                        <button class="discord-login-btn" id="discord-login">
+                            <i class="fab fa-discord"></i>
+                            Login with Discord
+                        </button>
+                        
+                        <div class="login-features">
+                            <div class="feature-item">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>Configure AutoMod rules</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-cog"></i>
+                                <span>Customize bot settings</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-chart-bar"></i>
+                                <span>View server analytics</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-users"></i>
+                                <span>Manage roles and permissions</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Section -->
+        <section class="dashboard-section" id="dashboard-section" style="display: none;">
+            <div class="dashboard-layout">
+                <!-- Sidebar -->
+                <aside class="dashboard-sidebar">
+                    <div class="sidebar-header">
+                        <h2>Dashboard</h2>
+                    </div>
+                    
+                    <nav class="sidebar-nav">
+                        <a href="#overview" class="sidebar-link active" data-section="overview">
+                            <i class="fas fa-home"></i> Overview
+                        </a>
+                        <a href="#servers" class="sidebar-link" data-section="servers">
+                            <i class="fas fa-server"></i> My Servers
+                        </a>
+                        <a href="#automod" class="sidebar-link" data-section="automod">
+                            <i class="fas fa-shield-alt"></i> AutoMod
+                        </a>
+                        <a href="#modmail" class="sidebar-link" data-section="modmail">
+                            <i class="fas fa-envelope"></i> Modmail
+                        </a>
+                        <a href="#economy" class="sidebar-link" data-section="economy">
+                            <i class="fas fa-coins"></i> Economy
+                        </a>
+                        <a href="#music" class="sidebar-link" data-section="music">
+                            <i class="fas fa-music"></i> Music
+                        </a>
+                        <a href="#settings" class="sidebar-link" data-section="settings">
+                            <i class="fas fa-cog"></i> Settings
+                        </a>
+                        <a href="#analytics" class="sidebar-link" data-section="analytics">
+                            <i class="fas fa-chart-bar"></i> Analytics
+                        </a>
+                    </nav>
+                </aside>
+
+                <!-- Main Content -->
+                <main class="dashboard-content">
+                    <!-- Overview Section -->
+                    <div class="content-section active" id="overview-section">
+                        <div class="section-header">
+                            <h1>Dashboard Overview</h1>
+                            <p>Manage your Discord servers with LyBotic</p>
+                        </div>
+                        
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-server"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h3 id="server-count">0</h3>
+                                    <p>Connected Servers</p>
+                                </div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h3 id="member-count">0</h3>
+                                    <p>Total Members</p>
+                                </div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h3 id="automod-rules">0</h3>
+                                    <p>AutoMod Rules</p>
+                                </div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h3 id="tickets-count">0</h3>
+                                    <p>Open Tickets</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="quick-actions">
+                            <h2>Quick Actions</h2>
+                            <div class="action-cards">
+                                <div class="action-card" data-action="setup-automod">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <h3>Setup AutoMod</h3>
+                                    <p>Configure automatic moderation rules</p>
+                                </div>
+                                
+                                <div class="action-card" data-action="configure-modmail">
+                                    <i class="fas fa-envelope"></i>
+                                    <h3>Configure Modmail</h3>
+                                    <p>Set up ticket support system</p>
+                                </div>
+                                
+                                <div class="action-card" data-action="setup-economy">
+                                    <i class="fas fa-coins"></i>
+                                    <h3>Setup Economy</h3>
+                                    <p>Enable economy features</p>
+                                </div>
+                                
+                                <div class="action-card" data-action="view-analytics">
+                                    <i class="fas fa-chart-bar"></i>
+                                    <h3>View Analytics</h3>
+                                    <p>Check server statistics</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Servers Section -->
+                    <div class="content-section" id="servers-section">
+                        <div class="section-header">
+                            <h1>My Servers</h1>
+                            <p>Select a server to configure</p>
+                        </div>
+                        
+                        <div class="servers-grid" id="servers-grid">
+                            <!-- Server cards will be loaded here -->
+                        </div>
+                        
+                        <div class="empty-state" id="no-servers" style="display: none;">
+                            <div class="empty-state-icon">
+                                <i class="fas fa-server"></i>
+                            </div>
+                            <h3 class="empty-state-title">No Servers Found</h3>
+                            <p class="empty-state-description">
+                                Add LyBotic to your servers to manage them here.
+                            </p>
+                            <a href="https://discord.com/oauth2/authorize?client_id=YOUR_BOT_ID&permissions=8&scope=bot%20applications.commands" class="btn btn-primary" target="_blank">
+                                <i class="fab fa-discord"></i> Add to Server
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- AutoMod Section -->
+                    <div class="content-section" id="automod-section">
+                        <div class="section-header">
+                            <h1>AutoMod Configuration</h1>
+                            <p>Configure Discord's native AutoMod system</p>
+                        </div>
+                        
+                        <div class="server-selector">
+                            <select id="automod-server-select" class="input-field">
+                                <option value="">Select a server...</option>
+                            </select>
+                        </div>
+                        
+                        <div class="automod-content" id="automod-content" style="display: none;">
+                            <div class="automod-stats">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3>AutoMod Status</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="status-indicator online">
+                                            <span class="status-dot"></span>
+                                            AutoMod Active
+                                        </div>
+                                        <p>3 rules configured</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="automod-rules">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3>Active Rules</h3>
+                                        <button class="btn btn-primary" id="add-rule-btn">
+                                            <i class="fas fa-plus"></i> Add Rule
+                                        </button>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="rules-list" id="automod-rules-list">
+                                            <!-- Rules will be loaded here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Settings Section -->
+                    <div class="content-section" id="settings-section">
+                        <div class="section-header">
+                            <h1>Bot Settings</h1>
+                            <p>Configure LyBotic for your server</p>
+                        </div>
+                        
+                        <div class="server-selector">
+                            <select id="settings-server-select" class="input-field">
+                                <option value="">Select a server...</option>
+                            </select>
+                        </div>
+                        
+                        <div class="settings-content" id="settings-content" style="display: none;">
+                            <div class="settings-tabs">
+                                <div class="tabs">
+                                    <ul class="tab-list">
+                                        <li><button class="tab-button active" data-tab="general">General</button></li>
+                                        <li><button class="tab-button" data-tab="moderation">Moderation</button></li>
+                                        <li><button class="tab-button" data-tab="economy">Economy</button></li>
+                                        <li><button class="tab-button" data-tab="music">Music</button></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <!-- General Settings -->
+                            <div class="tab-content active" id="general-tab">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3>General Configuration</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="input-group">
+                                            <label class="input-label">Command Prefix</label>
+                                            <input type="text" class="input-field" id="command-prefix" value="!" maxlength="3">
+                                            <span class="input-help">The prefix for bot commands (1-3 characters)</span>
+                                        </div>
+                                        
+                                        <div class="input-group">
+                                            <label class="input-label">Default Language</label>
+                                            <select class="input-field" id="default-language">
+                                                <option value="en">English</option>
+                                                <option value="es">Spanish</option>
+                                                <option value="fr">French</option>
+                                                <option value="de">German</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <button class="btn btn-primary" id="save-general">
+                                            <i class="fas fa-save"></i> Save Changes
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- More tab contents would go here -->
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </section>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay" style="display: none;">
+        <div class="loading-spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/discord-auth.js"></script>
+</body>
+</html>

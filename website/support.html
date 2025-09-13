@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support - LyBotic Discord Bot</title>
+    <meta name="description" content="Get help with LyBotic Discord bot. Find answers in our FAQ, contact support, or join our Discord community.">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <img src="assets/logo.png" alt="LyBotic Logo" class="nav-logo">
+                <span class="nav-title">LyBotic</span>
+            </div>
+            
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="index.html#features" class="nav-link">Features</a>
+                <a href="commands.html" class="nav-link">Commands</a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="support.html" class="nav-link active">Support</a>
+                <a href="docs.html" class="nav-link">Docs</a>
+            </div>
+            
+            <div class="nav-actions">
+                <a href="https://discord.com/oauth2/authorize?client_id=YOUR_BOT_ID&permissions=8&scope=bot%20applications.commands" class="btn btn-primary" target="_blank">
+                    <i class="fab fa-discord"></i> Add to Server
+                </a>
+                <div class="nav-toggle" id="nav-toggle">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <div class="breadcrumb">
+                <div class="breadcrumb-item">
+                    <a href="index.html" class="breadcrumb-link">Home</a>
+                </div>
+                <div class="breadcrumb-item">Support</div>
+            </div>
+            
+            <h1 class="page-title">Help & Support</h1>
+            <p class="page-description">
+                Find answers to common questions or get personalized help from our support team.
+            </p>
+        </div>
+    </section>
+
+    <!-- Support Options -->
+    <section class="support-options">
+        <div class="container">
+            <div class="support-grid">
+                <a href="#faq" class="support-card">
+                    <div class="support-icon">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                    <h3>FAQ</h3>
+                    <p>Quick answers to common questions</p>
+                </a>
+                
+                <a href="https://discord.gg/your-support-server" class="support-card" target="_blank">
+                    <div class="support-icon">
+                        <i class="fab fa-discord"></i>
+                    </div>
+                    <h3>Discord Server</h3>
+                    <p>Join our community for live help</p>
+                </a>
+                
+                <a href="#contact" class="support-card">
+                    <div class="support-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3>Contact Form</h3>
+                    <p>Send us a detailed message</p>
+                </a>
+                
+                <a href="docs.html" class="support-card">
+                    <div class="support-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3>Documentation</h3>
+                    <p>Detailed guides and tutorials</p>
+                </a>
+                
+                <a href="status.html" class="support-card">
+                    <div class="support-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h3>Status Page</h3>
+                    <p>Check bot availability and issues</p>
+                </a>
+                
+                <a href="command-tester.html" class="support-card">
+                    <div class="support-icon">
+                        <i class="fas fa-terminal"></i>
+                    </div>
+                    <h3>Command Tester</h3>
+                    <p>Test commands before using them</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" id="faq">
+        <div class="container">
+            <div class="section-header">
+                <h2>Frequently Asked Questions</h2>
+                <p>Find answers to the most common questions about LyBotic</p>
+            </div>
+            
+            <div class="faq-search">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="faq-search" class="search-input" placeholder="Search FAQ...">
+                </div>
+            </div>
+            
+            <div class="faq-categories">
+                <button class="faq-category-btn active" data-category="all">All</button>
+                <button class="faq-category-btn" data-category="setup">Setup</button>
+                <button class="faq-category-btn" data-category="commands">Commands</button>
+                <button class="faq-category-btn" data-category="permissions">Permissions</button>
+                <button class="faq-category-btn" data-category="troubleshooting">Troubleshooting</button>
+            </div>
+            
+            <div class="faq-accordion" id="faq-accordion">
+                <!-- Setup Questions -->
+                <div class="accordion-item" data-category="setup">
+                    <div class="accordion-header">
+                        <h3 class="accordion-title">How do I add LyBotic to my server?</h3>
+                        <i class="fas fa-chevron-down accordion-icon"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p>To add LyBotic to your Discord server:</p>
+                        <ol>
+                            <li>Click the "Add to Server" button on this website</li>
+                            <li>Select your server from the dropdown</li>
+                            <li>Review and approve the requested permissions</li>
+                            <li>Click "Authorize" to complete the setup</li>
+                        </ol>
+                        <p>Once added, type <code>!help</code> to get started!</p>
+                    </div>
+                </div>
+                
+                <div class="accordion-item" data-category="setup">
+                    <div class="accordion-header">
+                        <h3 class="accordion-title">What permissions does LyBotic need?</h3>
+                        <i class="fas fa-chevron-down accordion-icon"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p>LyBotic requires the following permissions for full functionality:</p>
+                        <ul>
+                            <li><strong>Read Messages</strong> - To see commands</li>
+                            <li><strong>Send Messages</strong> - To respond to commands</li>
+                            <li><strong>Manage Messages</strong> - For moderation features</li>
+                            <li><strong>Embed Links</strong> - For rich message embeds</li>
+                            <li><strong>Attach Files</strong> - For image and file features</li>
+                            <li><strong>Use External Emojis</strong> - For reaction commands</li>
+                            <li><strong>Connect & Speak</strong> - For music features</li>
+                            <li><strong>Manage Roles</strong> - For role management commands</li>
+                        </ul>
+                        <p>You can customize permissions per channel if needed.</p>
+                    </div>
+                </div>
+                
+                <!-- Commands Questions -->
+                <div class="accordion-item" data-category="commands">
+                    <div class="accordion-header">
+                        <h3 class="accordion-title">How do I use commands?</h3>
+                        <i class="fas fa-chevron-down accordion-icon"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p>LyBotic supports both prefix and slash commands:</p>
+                        <h4>Prefix Commands:</h4>
+                        <p>Type <code>!</code> followed by the command name. For example:</p>
+                        <ul>
+                            <li><code>!help</code> - Shows the help menu</li>
+                            <li><code>!ban @user</code> - Bans a user</li>
+                            <li><code>!play song name</code> - Plays music</li>
+                        </ul>
+                        <h4>Slash Commands:</h4>
+                        <p>Type <code>/</code> and select from the autocomplete menu.</p>
+                        <p>Visit our <a href="commands.html">Commands page</a> for a complete list.</p>
+                    </div>
+                </div>
+                
+                <div class="accordion-item" data-category="commands">
+                    <div class="accordion-header">
+                        <h3 class="accordion-title">Can I change the command prefix?</h3>
+                        <i class="fas fa-chevron-down accordion-icon"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p>Yes! You can customize the command prefix using the web dashboard:</p>
+                        <ol>
+                            <li>Go to the <a href="dashboard.html">Dashboard</a></li>
+                            <li>Login with Discord</li>
+                            <li>Select your server</li>
+                            <li>Navigate to Settings → General</li>
+                            <li>Change the "Command Prefix" field</li>
+                            <li>Save your changes</li>
+                        </ol>
+                        <p>The prefix can be 1-3 characters long.</p>
+                    </div>
+                </div>
+                
+                <!-- Permissions Questions -->
+                <div class="accordion-item" data-category="permissions">
+                    <div class="accordion-header">
+                        <h3 class="accordion-title">Who can use moderation commands?</h3>
+                        <i class="fas fa-chevron-down accordion-icon"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p>Moderation commands require appropriate Discord permissions:</p>
+                        <ul>
+                            <li><strong>Ban/Kick</strong> - Requires "Ban Members" or "Kick Members" permission</li>
+                            <li><strong>Mute/Timeout</strong> - Requires "Moderate Members" permission</li>
+                            <li><strong>Role Management</strong> - Requires "Manage Roles" permission</li>
+                            <li><strong>AutoMod</strong> - Requires "Manage Server" permission</li>
+                        </ul>
+                        <p>Server administrators can always use all commands.</p>
+                    </div>
+                </div>
+                
+                <div class="accordion-item" data-category="permissions">
+                    <div class="accordion-header">
+                        <h3 class="accordion-title">How do I set up AutoMod?</h3>
+                        <i class="fas fa-chevron-down accordion-icon"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p>LyBotic integrates with Discord's native AutoMod system:</p>
+                        <ol>
+                            <li>Use <code>!automod setup</code> for quick configuration</li>
+                            <li>Or use the web dashboard for advanced settings</li>
+                            <li>Choose from preset filters (spam, bad words, etc.)</li>
+                            <li>Customize actions and log channels</li>
+                        </ol>
+                        <p>AutoMod rules help automatically moderate your server 24/7.</p>
+                    </div>
+                </div>
+                
+                <!-- Troubleshooting Questions -->
+                <div class="accordion-item" data-category="troubleshooting">
+                    <div class="accordion-header">
+                        <h3 class="accordion-title">The bot isn't responding to commands</h3>
+                        <i class="fas fa-chevron-down accordion-icon"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p>If LyBotic isn't responding, try these steps:</p>
+                        <ol>
+                            <li>Check if the bot is online (green status)</li>
+                            <li>Verify the bot has "Read Messages" permission in the channel</li>
+                            <li>Make sure you're using the correct prefix (default is <code>!</code>)</li>
+                            <li>Check if the channel has any bot restrictions</li>
+                            <li>Try using the command in a different channel</li>
+                        </ol>
+                        <p>If issues persist, join our <a href="https://discord.gg/your-support-server">Discord server</a> for help.</p>
+                    </div>
+                </div>
+                
+                <div class="accordion-item" data-category="troubleshooting">
+                    <div class="accordion-header">
+                        <h3 class="accordion-title">Music isn't working</h3>
+                        <i class="fas fa-chevron-down accordion-icon"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p>For music troubleshooting:</p>
+                        <ol>
+                            <li>Make sure you're in a voice channel</li>
+                            <li>Check if the bot has "Connect" and "Speak" permissions</li>
+                            <li>Verify the voice channel isn't user-limited</li>
+                            <li>Try a different song or platform</li>
+                            <li>Use <code>!music status</code> to check the player</li>
+                        </ol>
+                        <p>Supported platforms: YouTube, Spotify, SoundCloud.</p>
+                    </div>
+                </div>
+                
+                <div class="accordion-item" data-category="troubleshooting">
+                    <div class="accordion-header">
+                        <h3 class="accordion-title">Economy features aren't working</h3>
+                        <i class="fas fa-chevron-down accordion-icon"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p>Economy system troubleshooting:</p>
+                        <ol>
+                            <li>Use <code>!balance</code> to check your wallet</li>
+                            <li>Try <code>!work</code> to earn initial coins</li>
+                            <li>Check if economy is enabled: <code>!economy status</code></li>
+                            <li>Review cooldown timers for commands</li>
+                        </ol>
+                        <p>Your economy data is persistent across server restarts.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Form -->
+    <section class="contact-section" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2>Contact Support</h2>
+                <p>Can't find what you're looking for? Send us a message and we'll help you out.</p>
+            </div>
+            
+            <div class="contact-content">
+                <div class="contact-form-container">
+                    <form class="contact-form" id="contact-form">
+                        <div class="form-row">
+                            <div class="input-group">
+                                <label class="input-label">Name *</label>
+                                <input type="text" class="input-field" id="contact-name" required>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">Email *</label>
+                                <input type="email" class="input-field" id="contact-email" required>
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">Discord Username</label>
+                            <input type="text" class="input-field" id="contact-discord" placeholder="YourName#1234">
+                            <span class="input-help">Optional: Include your Discord username for faster support</span>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">Server ID</label>
+                            <input type="text" class="input-field" id="contact-server-id" placeholder="123456789012345678">
+                            <span class="input-help">Optional: Your Discord server ID if the issue is server-specific</span>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">Issue Category *</label>
+                            <select class="input-field" id="contact-category" required>
+                                <option value="">Select a category...</option>
+                                <option value="setup">Bot Setup & Configuration</option>
+                                <option value="commands">Commands & Features</option>
+                                <option value="permissions">Permissions & Roles</option>
+                                <option value="automod">AutoMod Issues</option>
+                                <option value="music">Music Player</option>
+                                <option value="economy">Economy System</option>
+                                <option value="bug">Bug Report</option>
+                                <option value="feature">Feature Request</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">Subject *</label>
+                            <input type="text" class="input-field" id="contact-subject" required>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">Message *</label>
+                            <textarea class="input-field" id="contact-message" rows="6" required placeholder="Please describe your issue in detail..."></textarea>
+                            <span class="input-help">Include any error messages, screenshots, or steps to reproduce the issue</span>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="contact-newsletter">
+                                <span class="checkmark"></span>
+                                Subscribe to newsletter for updates and announcements
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-large">
+                            <i class="fas fa-paper-plane"></i>
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="contact-info">
+                    <div class="contact-card">
+                        <h3>Response Times</h3>
+                        <ul>
+                            <li><strong>Critical Issues:</strong> Within 2 hours</li>
+                            <li><strong>General Support:</strong> Within 24 hours</li>
+                            <li><strong>Feature Requests:</strong> Within 3-5 days</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="contact-card">
+                        <h3>Before Contacting</h3>
+                        <ul>
+                            <li>Check our <a href="#faq">FAQ section</a></li>
+                            <li>Search our <a href="docs.html">documentation</a></li>
+                            <li>Try asking in our <a href="https://discord.gg/your-server">Discord server</a></li>
+                            <li>Check the <a href="status.html">status page</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="contact-card">
+                        <h3>Bug Reports</h3>
+                        <p>When reporting bugs, please include:</p>
+                        <ul>
+                            <li>Steps to reproduce the issue</li>
+                            <li>Expected vs actual behavior</li>
+                            <li>Screenshots or error messages</li>
+                            <li>Server and user IDs</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-brand">
+                        <img src="assets/logo.png" alt="LyBotic Logo" class="footer-logo">
+                        <span class="footer-title">LyBotic</span>
+                    </div>
+                    <p class="footer-description">
+                        The ultimate Discord bot with 540+ commands for complete server management and entertainment.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://discord.gg/your-server" target="_blank"><i class="fab fa-discord"></i></a>
+                        <a href="https://github.com/yourusername" target="_blank"><i class="fab fa-github"></i></a>
+                        <a href="https://twitter.com/yourusername" target="_blank"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul class="footer-links">
+                        <li><a href="commands.html">Commands</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="docs.html">Documentation</a></li>
+                        <li><a href="status.html">Status</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul class="footer-links">
+                        <li><a href="support.html">Help Center</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="https://discord.gg/your-server">Discord</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="security.html">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 LyBotic. All rights reserved.</p>
+                <p>Made with ❤️ for Discord communities</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/support.js"></script>
+
+    <style>
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: calc(70px + var(--space-3xl)) 0 var(--space-3xl);
+        }
+        
+        .page-title {
+            font-size: 3rem;
+            margin-bottom: var(--space-md);
+            color: white;
+        }
+        
+        .page-description {
+            font-size: 1.125rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+        }
+        
+        .support-options {
+            padding: var(--space-3xl) 0;
+        }
+        
+        .support-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-lg);
+        }
+        
+        .support-card {
+            background: var(--surface);
+            padding: var(--space-xl);
+            border-radius: var(--border-radius-xl);
+            text-align: center;
+            text-decoration: none;
+            transition: var(--transition-normal);
+            border: 2px solid transparent;
+        }
+        
+        .support-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-color);
+        }
+        
+        .support-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border-radius: var(--border-radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin: 0 auto var(--space-lg);
+        }
+        
+        .support-card h3 {
+            margin-bottom: var(--space-sm);
+            color: var(--text-primary);
+        }
+        
+        .support-card p {
+            color: var(--text-secondary);
+            margin: 0;
+        }
+        
+        .faq-section {
+            background: var(--background-alt);
+            padding: var(--space-3xl) 0;
+        }
+        
+        .faq-search {
+            margin-bottom: var(--space-xl);
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .faq-categories {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+            flex-wrap: wrap;
+        }
+        
+        .faq-category-btn {
+            padding: var(--space-sm) var(--space-lg);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-secondary);
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        .faq-category-btn.active,
+        .faq-category-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .faq-accordion {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .contact-section {
+            padding: var(--space-3xl) 0;
+        }
+        
+        .contact-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-3xl);
+            align-items: start;
+        }
+        
+        .contact-form-container {
+            background: var(--surface);
+            padding: var(--space-xl);
+            border-radius: var(--border-radius-xl);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-lg);
+        }
+        
+        .contact-card {
+            background: var(--surface);
+            padding: var(--space-lg);
+            border-radius: var(--border-radius-lg);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .contact-card h3 {
+            margin-bottom: var(--space-md);
+            color: var(--text-primary);
+        }
+        
+        .contact-card ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .contact-card li {
+            padding: var(--space-xs) 0;
+            color: var(--text-secondary);
+        }
+        
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+        
+        .checkbox-container input[type="checkbox"] {
+            margin: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .support-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .faq-categories {
+                justify-content: flex-start;
+            }
+            
+            .contact-content {
+                grid-template-columns: 1fr;
+                gap: var(--space-xl);
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .support-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>
