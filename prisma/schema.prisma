@@ -150,3 +150,37 @@ model GuildSettings {
   
   @@unique([guildId, key])
 }
+
+// Modmail System Models
+model ModmailTicket {
+  id        Int      @id @default(autoincrement())
+  userId    String   // User who created the ticket
+  guildId   String   // Guild where ticket was created
+  channelId String   // Discord channel ID for the ticket
+  status    String   @default("OPEN") // OPEN, CLOSED, ARCHIVED
+  closedBy  String?  // User ID who closed the ticket
+  closedAt  DateTime?
+  transcript String? // Full conversation transcript
+  
+  // Relations
+  messages  ModmailMessage[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([userId, guildId, status]) // Prevent duplicate open tickets per user per guild
+}
+
+model ModmailMessage {
+  id          Int      @id @default(autoincrement())
+  ticketId    Int      // Reference to the ticket
+  authorId    String   // Discord user ID of message author
+  content     String   // Message content
+  isFromUser  Boolean  // true if from ticket creator, false if from staff
+  attachments Json?    // Array of attachment URLs and names
+  
+  // Relations  
+  ticket      ModmailTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime @default(now())
+}
