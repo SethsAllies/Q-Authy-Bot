@@ -35,6 +35,15 @@ client.once('ready', async () => {
   console.log(`🎫 Modmail Bot (${client.user.tag}) is online!`);
   console.log(`📊 Serving ${client.guilds.cache.size} servers`);
   
+  // Set bot status
+  client.user.setPresence({
+    activities: [{
+      name: 'Sending Your Messages To Admins',
+      type: 0 // Playing
+    }],
+    status: 'online'
+  });
+  
   try {
     await prisma.$connect();
     console.log('✅ Modmail database connected successfully');
