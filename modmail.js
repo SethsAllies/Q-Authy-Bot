@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType, PermissionFlagsBits } from 'discord.js';
+import { Client, GatewayIntentBits, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType, PermissionFlagsBits, Partials } from 'discord.js';
 import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
 
@@ -12,7 +12,7 @@ const client = new Client({
     GatewayIntentBits.DirectMessages,
     GatewayIntentBits.GuildMembers
   ],
-  partials: ['CHANNEL', 'MESSAGE']
+  partials: [Partials.Channel, Partials.Message, Partials.User]
 });
 
 const prisma = new PrismaClient();
@@ -26,9 +26,10 @@ const MODMAIL_CONFIG = {
   maxTicketsPerUser: 3
 };
 
-// Track active tickets
-const activeTickets = new Map(); // userId -> {channelId, guildId, ticketId}
+// Track active tickets - support multiple tickets per user across guilds
+const activeTickets = new Map(); // `${userId}-${guildId}` -> {channelId, guildId, ticketId}
 const ticketChannels = new Map(); // channelId -> {userId, ticketId, guildId}
+const userTickets = new Map(); // userId -> Array of {channelId, guildId, ticketId}
 
 client.once('ready', async () => {
   console.log(`🎫 Modmail Bot (${client.user.tag}) is online!`);
@@ -53,17 +54,40 @@ async function loadActiveTickets() {
     });
     
     for (const ticket of tickets) {
-      activeTickets.set(ticket.userId, {
+      const ticketKey = `${ticket.userId}-${ticket.guildId}`;
+      const ticketData = {
+        userId: ticket.userId,
         channelId: ticket.channelId,
         guildId: ticket.guildId,
         ticketId: ticket.id
-      });
+      };
       
+      // Check if channel still exists
+      const guild = client.guilds.cache.get(ticket.guildId);
+      const channel = guild?.channels.cache.get(ticket.channelId);
+      
+      if (!channel) {
+        // Channel was deleted, close the orphaned ticket
+        console.log(`⚠️ Orphaned ticket found (channel deleted): ${ticket.id}`);
+        await prisma.modmailTicket.update({
+          where: { id: ticket.id },
+          data: { status: 'CLOSED', closedAt: new Date(), closedBy: 'SYSTEM' }
+        });
+        continue;
+      }
+      
+      activeTickets.set(ticketKey, ticketData);
       ticketChannels.set(ticket.channelId, {
         userId: ticket.userId,
         ticketId: ticket.id,
         guildId: ticket.guildId
       });
+      
+      // Track user tickets
+      if (!userTickets.has(ticket.userId)) {
+        userTickets.set(ticket.userId, []);
+      }
+      userTickets.get(ticket.userId).push(ticketData);
     }
     
     console.log(`📝 Loaded ${tickets.length} active tickets`);
@@ -96,48 +120,65 @@ client.on('messageCreate', async (message) => {
 async function handleDirectMessage(message) {
   const userId = message.author.id;
   
-  // Check if user already has an active ticket
-  if (activeTickets.has(userId)) {
-    const ticket = activeTickets.get(userId);
-    const guild = client.guilds.cache.get(ticket.guildId);
-    const channel = guild?.channels.cache.get(ticket.channelId);
+  // Check if user has active tickets
+  if (userTickets.has(userId)) {
+    const tickets = userTickets.get(userId);
     
-    if (channel) {
-      // Forward message to ticket channel
-      const embed = new EmbedBuilder()
-        .setAuthor({
-          name: message.author.username,
-          iconURL: message.author.displayAvatarURL()
-        })
-        .setDescription(message.content || '*[No text content]*')
-        .setColor(0x3498db)
-        .setTimestamp();
+    // Find the most recent active ticket or prompt for selection
+    let targetTicket = null;
+    
+    if (tickets.length === 1) {
+      targetTicket = tickets[0];
+    } else {
+      // For multiple tickets, use the most recently created one
+      // In production, you might want to let users choose
+      targetTicket = tickets[tickets.length - 1];
+    }
+    
+    if (targetTicket) {
+      const guild = client.guilds.cache.get(targetTicket.guildId);
+      const channel = guild?.channels.cache.get(targetTicket.channelId);
       
-      if (message.attachments.size > 0) {
-        embed.addFields({
-          name: 'Attachments',
-          value: message.attachments.map(att => `[${att.name}](${att.url})`).join('\n')
-        });
-      }
-      
-      await channel.send({ embeds: [embed] });
-      
-      // Save message to database
-      await prisma.modmailMessage.create({
-        data: {
-          ticketId: ticket.ticketId,
-          authorId: userId,
-          content: message.content,
-          isFromUser: true,
-          attachments: message.attachments.size > 0 ? 
-            Array.from(message.attachments.values()).map(att => ({ name: att.name, url: att.url })) : 
-            []
+      if (channel) {
+        // Forward message to ticket channel
+        const embed = new EmbedBuilder()
+          .setAuthor({
+            name: message.author.username,
+            iconURL: message.author.displayAvatarURL()
+          })
+          .setDescription(message.content || '*[No text content]*')
+          .setColor(0x3498db)
+          .setTimestamp();
+        
+        if (message.attachments.size > 0) {
+          embed.addFields({
+            name: 'Attachments',
+            value: message.attachments.map(att => `[${att.name}](${att.url})`).join('\n')
+          });
         }
-      });
-      
-      // React to show message was received
-      await message.react('✅');
-      return;
+        
+        await channel.send({ embeds: [embed] });
+        
+        // Save message to database
+        await prisma.modmailMessage.create({
+          data: {
+            ticketId: targetTicket.ticketId,
+            authorId: userId,
+            content: message.content,
+            isFromUser: true,
+            attachments: message.attachments.size > 0 ? 
+              Array.from(message.attachments.values()).map(att => ({ name: att.name, url: att.url })) : 
+              []
+          }
+        });
+        
+        // React to show message was received
+        await message.react('✅');
+        return;
+      } else {
+        // Channel was deleted, clean up the ticket
+        await cleanupOrphanedTicket(targetTicket);
+      }
     }
   }
   
@@ -168,16 +209,17 @@ async function createNewTicket(message) {
     return;
   }
   
-  // Check user ticket limit
-  const userTickets = await prisma.modmailTicket.count({
+  // Check user ticket limit per guild
+  const openTicketCount = await prisma.modmailTicket.count({
     where: {
       userId: userId,
+      guildId: targetGuild.id,
       status: 'OPEN'
     }
   });
   
-  if (userTickets >= MODMAIL_CONFIG.maxTicketsPerUser) {
-    await message.reply(`❌ You already have the maximum number of open tickets (${MODMAIL_CONFIG.maxTicketsPerUser}). Please wait for your existing tickets to be resolved.`);
+  if (openTicketCount >= MODMAIL_CONFIG.maxTicketsPerUser) {
+    await message.reply(`❌ You already have the maximum number of open tickets (${MODMAIL_CONFIG.maxTicketsPerUser}) in **${targetGuild.name}**. Please wait for your existing tickets to be resolved.`);
     return;
   }
   
@@ -235,18 +277,27 @@ async function createNewTicket(message) {
       }
     });
     
-    // Add to active tickets
-    activeTickets.set(userId, {
+    // Add to active tickets with composite key
+    const ticketKey = `${userId}-${targetGuild.id}`;
+    const ticketData = {
+      userId: userId,
       channelId: ticketChannel.id,
       guildId: targetGuild.id,
       ticketId: ticket.id
-    });
+    };
     
+    activeTickets.set(ticketKey, ticketData);
     ticketChannels.set(ticketChannel.id, {
       userId: userId,
       ticketId: ticket.id,
       guildId: targetGuild.id
     });
+    
+    // Track user tickets
+    if (!userTickets.has(userId)) {
+      userTickets.set(userId, []);
+    }
+    userTickets.get(userId).push(ticketData);
     
     // Create ticket embed
     const user = message.author;
@@ -449,8 +500,21 @@ async function closeTicket(message) {
     });
     
     // Remove from active tickets
-    activeTickets.delete(ticketInfo.userId);
+    const ticketKey = `${ticketInfo.userId}-${ticketInfo.guildId}`;
+    activeTickets.delete(ticketKey);
     ticketChannels.delete(message.channel.id);
+    
+    // Remove from user tickets
+    if (userTickets.has(ticketInfo.userId)) {
+      const tickets = userTickets.get(ticketInfo.userId);
+      const index = tickets.findIndex(t => t.ticketId === ticketInfo.ticketId);
+      if (index !== -1) {
+        tickets.splice(index, 1);
+        if (tickets.length === 0) {
+          userTickets.delete(ticketInfo.userId);
+        }
+      }
+    }
     
     // Notify user
     try {
@@ -519,37 +583,139 @@ client.on('interactionCreate', async (interaction) => {
   if (!interaction.isButton()) return;
   
   const ticketInfo = ticketChannels.get(interaction.channel.id);
-  if (!ticketInfo) return;
+  if (!ticketInfo) {
+    await interaction.reply({ content: '❌ This is not a valid modmail ticket channel.', ephemeral: true });
+    return;
+  }
+  
+  // Check if user has staff permissions
+  const member = interaction.member;
+  const hasStaffRole = MODMAIL_CONFIG.supportRoleNames.some(roleName => 
+    member.roles.cache.some(role => role.name === roleName)
+  );
+  
+  if (!hasStaffRole && !member.permissions.has(PermissionFlagsBits.ManageMessages)) {
+    await interaction.reply({ content: '❌ You do not have permission to use this button.', ephemeral: true });
+    return;
+  }
   
   switch (interaction.customId) {
     case 'close_ticket':
       await interaction.deferReply();
-      // Simulate close command
-      const fakeMessage = {
-        channel: interaction.channel,
-        author: interaction.user,
-        reply: (content) => interaction.followUp(content)
-      };
-      await closeTicket(fakeMessage);
+      try {
+        // Create transcript before closing
+        const transcript = await generateTranscript(ticketInfo.ticketId);
+        
+        // Update ticket status
+        await prisma.modmailTicket.update({
+          where: { id: ticketInfo.ticketId },
+          data: { 
+            status: 'CLOSED',
+            closedAt: new Date(),
+            closedBy: interaction.user.id,
+            transcript: transcript
+          }
+        });
+        
+        // Remove from active tickets
+        const ticketKey = `${ticketInfo.userId}-${ticketInfo.guildId}`;
+        activeTickets.delete(ticketKey);
+        ticketChannels.delete(interaction.channel.id);
+        
+        // Remove from user tickets
+        if (userTickets.has(ticketInfo.userId)) {
+          const tickets = userTickets.get(ticketInfo.userId);
+          const index = tickets.findIndex(t => t.ticketId === ticketInfo.ticketId);
+          if (index !== -1) {
+            tickets.splice(index, 1);
+            if (tickets.length === 0) {
+              userTickets.delete(ticketInfo.userId);
+            }
+          }
+        }
+        
+        // Notify user
+        try {
+          const user = await client.users.fetch(ticketInfo.userId);
+          const embed = new EmbedBuilder()
+            .setTitle('🔒 Ticket Closed')
+            .setDescription(`Your modmail ticket has been closed by ${interaction.user}.\n\nIf you need further assistance, feel free to message me again.`)
+            .setColor(0x95a5a6)
+            .setTimestamp();
+          
+          await user.send({ embeds: [embed] });
+        } catch (error) {
+          console.log('Could not DM user about ticket closure');
+        }
+        
+        // Confirm closure
+        await interaction.followUp('🔒 Ticket closed. Channel will be deleted in 5 seconds...');
+        setTimeout(async () => {
+          try {
+            await interaction.channel.delete();
+          } catch (error) {
+            console.error('Failed to delete ticket channel:', error);
+          }
+        }, 5000);
+        
+        console.log(`🔒 Ticket ${ticketInfo.ticketId} closed by ${interaction.user.tag}`);
+        
+      } catch (error) {
+        console.error('❌ Failed to close ticket:', error);
+        await interaction.followUp('❌ Failed to close ticket.');
+      }
+      break;
+      
+    case 'add_staff':
+      await interaction.reply({ 
+        content: 'To add staff to this ticket, use the command: `!add @user`',
+        ephemeral: true 
+      });
       break;
       
     case 'create_transcript':
       await interaction.deferReply({ ephemeral: true });
-      const transcript = await generateTranscript(ticketInfo.ticketId);
-      
-      // Save transcript to a text file and send it
-      const buffer = Buffer.from(transcript, 'utf-8');
-      const attachment = {
-        attachment: buffer,
-        name: `ticket-${ticketInfo.ticketId}-transcript.txt`
-      };
-      
-      await interaction.followUp({
-        content: '📝 Here is the transcript for this ticket:',
-        files: [attachment],
-        ephemeral: true
-      });
+      try {
+        const transcript = await generateTranscript(ticketInfo.ticketId);
+        
+        // Save transcript to a text file and send it
+        const buffer = Buffer.from(transcript, 'utf-8');
+        const attachment = {
+          attachment: buffer,
+          name: `ticket-${ticketInfo.ticketId}-transcript.txt`
+        };
+        
+        await interaction.followUp({
+          content: '📝 Here is the transcript for this ticket:',
+          files: [attachment],
+          ephemeral: true
+        });
+      } catch (error) {
+        console.error('Failed to generate transcript:', error);
+        await interaction.followUp({
+          content: '❌ Failed to generate transcript.',
+          ephemeral: true
+        });
+      }
       break;
+  }
+});
+
+// Handle channel deletion
+client.on('channelDelete', async (channel) => {
+  if (ticketChannels.has(channel.id)) {
+    const ticketInfo = ticketChannels.get(channel.id);
+    console.log(`📢 Ticket channel deleted: ${channel.name} (ticket #${ticketInfo.ticketId})`);
+    
+    // Create ticket data for cleanup
+    const ticketData = {
+      userId: ticketInfo.userId,
+      channelId: channel.id,
+      guildId: ticketInfo.guildId,
+      ticketId: ticketInfo.ticketId
+    };
+    
+    await cleanupOrphanedTicket(ticketData);
   }
 });
 
@@ -561,6 +727,165 @@ client.on('error', error => {
 process.on('unhandledRejection', error => {
   console.error('Unhandled promise rejection:', error);
 });
+
+// Staff command implementations
+async function addUserToTicket(message, args) {
+  const ticketInfo = ticketChannels.get(message.channel.id);
+  if (!ticketInfo) {
+    await message.reply('❌ This is not a modmail ticket channel.');
+    return;
+  }
+  
+  if (!args[0]) {
+    await message.reply('❌ Please mention a user to add. Usage: `!add @user`');
+    return;
+  }
+  
+  const userId = args[0].replace(/[<@!>]/g, '');
+  const member = await message.guild.members.fetch(userId).catch(() => null);
+  
+  if (!member) {
+    await message.reply('❌ User not found.');
+    return;
+  }
+  
+  try {
+    await message.channel.permissionOverwrites.create(member, {
+      ViewChannel: true,
+      SendMessages: true,
+      ReadMessageHistory: true
+    });
+    
+    await message.reply(`✅ Added ${member} to this ticket.`);
+  } catch (error) {
+    console.error('Failed to add user to ticket:', error);
+    await message.reply('❌ Failed to add user to ticket.');
+  }
+}
+
+async function removeUserFromTicket(message, args) {
+  const ticketInfo = ticketChannels.get(message.channel.id);
+  if (!ticketInfo) {
+    await message.reply('❌ This is not a modmail ticket channel.');
+    return;
+  }
+  
+  if (!args[0]) {
+    await message.reply('❌ Please mention a user to remove. Usage: `!remove @user`');
+    return;
+  }
+  
+  const userId = args[0].replace(/[<@!>]/g, '');
+  const member = await message.guild.members.fetch(userId).catch(() => null);
+  
+  if (!member) {
+    await message.reply('❌ User not found.');
+    return;
+  }
+  
+  try {
+    await message.channel.permissionOverwrites.delete(member);
+    await message.reply(`✅ Removed ${member} from this ticket.`);
+  } catch (error) {
+    console.error('Failed to remove user from ticket:', error);
+    await message.reply('❌ Failed to remove user from ticket.');
+  }
+}
+
+async function createTranscript(message) {
+  const ticketInfo = ticketChannels.get(message.channel.id);
+  if (!ticketInfo) {
+    await message.reply('❌ This is not a modmail ticket channel.');
+    return;
+  }
+  
+  try {
+    const transcript = await generateTranscript(ticketInfo.ticketId);
+    const buffer = Buffer.from(transcript, 'utf-8');
+    const attachment = {
+      attachment: buffer,
+      name: `ticket-${ticketInfo.ticketId}-transcript.txt`
+    };
+    
+    await message.reply({
+      content: '📝 Here is the transcript for this ticket:',
+      files: [attachment]
+    });
+  } catch (error) {
+    console.error('Failed to generate transcript:', error);
+    await message.reply('❌ Failed to generate transcript.');
+  }
+}
+
+async function listTickets(message) {
+  try {
+    const tickets = await prisma.modmailTicket.findMany({
+      where: { 
+        guildId: message.guild.id,
+        status: 'OPEN'
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 10
+    });
+    
+    if (tickets.length === 0) {
+      await message.reply('📭 No open tickets in this server.');
+      return;
+    }
+    
+    const embed = new EmbedBuilder()
+      .setTitle('🎫 Open Tickets')
+      .setColor(0x3498db)
+      .setTimestamp();
+    
+    let description = '';
+    for (const ticket of tickets) {
+      const user = await client.users.fetch(ticket.userId).catch(() => null);
+      const channel = message.guild.channels.cache.get(ticket.channelId);
+      
+      description += `**#${ticket.id}** - ${user?.tag || 'Unknown User'}\n`;
+      description += `Channel: ${channel || 'Deleted'} | Created: <t:${Math.floor(ticket.createdAt.getTime() / 1000)}:R>\n\n`;
+    }
+    
+    embed.setDescription(description || 'No tickets found.');
+    await message.reply({ embeds: [embed] });
+    
+  } catch (error) {
+    console.error('Failed to list tickets:', error);
+    await message.reply('❌ Failed to list tickets.');
+  }
+}
+
+// Clean up orphaned ticket
+async function cleanupOrphanedTicket(ticketData) {
+  try {
+    // Update ticket status to closed
+    await prisma.modmailTicket.update({
+      where: { id: ticketData.ticketId },
+      data: { status: 'CLOSED', closedAt: new Date(), closedBy: 'SYSTEM' }
+    });
+    
+    // Remove from all maps
+    const ticketKey = `${ticketData.userId}-${ticketData.guildId}`;
+    activeTickets.delete(ticketKey);
+    ticketChannels.delete(ticketData.channelId);
+    
+    if (userTickets.has(ticketData.userId)) {
+      const tickets = userTickets.get(ticketData.userId);
+      const index = tickets.findIndex(t => t.ticketId === ticketData.ticketId);
+      if (index !== -1) {
+        tickets.splice(index, 1);
+        if (tickets.length === 0) {
+          userTickets.delete(ticketData.userId);
+        }
+      }
+    }
+    
+    console.log(`🧹 Cleaned up orphaned ticket ${ticketData.ticketId}`);
+  } catch (error) {
+    console.error('Failed to cleanup orphaned ticket:', error);
+  }
+}
 
 // Start the modmail bot
 client.login(process.env.DISCORD_TOKEN1);

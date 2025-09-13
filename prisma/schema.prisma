@@ -167,8 +167,6 @@ model ModmailTicket {
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
-  @@unique([userId, guildId, status]) // Prevent duplicate open tickets per user per guild
 }
 
 model ModmailMessage {
