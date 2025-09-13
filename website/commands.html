@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commands - LyBotic Discord Bot</title>
+    <meta name="description" content="Complete list of LyBotic's 540+ commands across 6 categories: moderation, fun, economy, music, utility, and AI features.">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Fira Code Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <img src="assets/logo.png" alt="LyBotic Logo" class="nav-logo">
+                <span class="nav-title">LyBotic</span>
+            </div>
+            
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="index.html#features" class="nav-link">Features</a>
+                <a href="commands.html" class="nav-link active">Commands</a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="support.html" class="nav-link">Support</a>
+                <a href="docs.html" class="nav-link">Docs</a>
+            </div>
+            
+            <div class="nav-actions">
+                <a href="https://discord.com/oauth2/authorize?client_id=YOUR_BOT_ID&permissions=8&scope=bot%20applications.commands" class="btn btn-primary" target="_blank">
+                    <i class="fab fa-discord"></i> Add to Server
+                </a>
+                <div class="nav-toggle" id="nav-toggle">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <div class="breadcrumb">
+                <div class="breadcrumb-item">
+                    <a href="index.html" class="breadcrumb-link">Home</a>
+                </div>
+                <div class="breadcrumb-item">Commands</div>
+            </div>
+            
+            <h1 class="page-title">Command Reference</h1>
+            <p class="page-description">
+                Explore all 540+ commands available in LyBotic. Use the search and filters to find exactly what you need.
+            </p>
+        </div>
+    </section>
+
+    <!-- Commands Section -->
+    <section class="commands-section">
+        <div class="container">
+            <!-- Search and Filters -->
+            <div class="commands-controls">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="command-search" class="search-input" placeholder="Search commands...">
+                </div>
+                
+                <div class="filter-tabs">
+                    <div class="tabs">
+                        <ul class="tab-list">
+                            <li><button class="tab-button active" data-category="all">All Commands (540+)</button></li>
+                            <li><button class="tab-button" data-category="moderation">🛡️ Moderation (17)</button></li>
+                            <li><button class="tab-button" data-category="fun">🎮 Fun (41)</button></li>
+                            <li><button class="tab-button" data-category="economy">💰 Economy (13)</button></li>
+                            <li><button class="tab-button" data-category="music">🎶 Music (6)</button></li>
+                            <li><button class="tab-button" data-category="utility">🛠️ Utility (20)</button></li>
+                            <li><button class="tab-button" data-category="ai">🤖 AI (2)</button></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Commands Grid -->
+            <div class="commands-grid" id="commands-grid">
+                <!-- Moderation Commands -->
+                <div class="command-card" data-category="moderation">
+                    <div class="command-header">
+                        <span class="command-name">!ban</span>
+                        <span class="command-category">moderation</span>
+                    </div>
+                    <p class="command-description">Ban a user from the server with optional reason and duration</p>
+                    <div class="command-usage">!ban @user [duration] [reason]</div>
+                    <div class="command-aliases">
+                        <span class="command-alias">!b</span>
+                        <span class="command-alias">!banish</span>
+                    </div>
+                </div>
+
+                <div class="command-card" data-category="moderation">
+                    <div class="command-header">
+                        <span class="command-name">!kick</span>
+                        <span class="command-category">moderation</span>
+                    </div>
+                    <p class="command-description">Kick a user from the server</p>
+                    <div class="command-usage">!kick @user [reason]</div>
+                    <div class="command-aliases">
+                        <span class="command-alias">!k</span>
+                    </div>
+                </div>
+
+                <div class="command-card" data-category="moderation">
+                    <div class="command-header">
+                        <span class="command-name">!mute</span>
+                        <span class="command-category">moderation</span>
+                    </div>
+                    <p class="command-description">Mute a user for a specified duration</p>
+                    <div class="command-usage">!mute @user [duration] [reason]</div>
+                    <div class="command-aliases">
+                        <span class="command-alias">!timeout</span>
+                        <span class="command-alias">!silence</span>
+                    </div>
+                </div>
+
+                <div class="command-card" data-category="moderation">
+                    <div class="command-header">
+                        <span class="command-name">!warn</span>
+                        <span class="command-category">moderation</span>
+                    </div>
+                    <p class="command-description">Issue a warning to a user</p>
+                    <div class="command-usage">!warn @user [reason]</div>
+                    <div class="command-aliases">
+                        <span class="command-alias">!warning</span>
+                    </div>
+                </div>
+
+                <div class="command-card" data-category="moderation">
+                    <div class="command-header">
+                        <span class="command-name">!automod</span>
+                        <span class="command-category">moderation</span>
+                    </div>
+                    <p class="command-description">Manage Discord AutoMod rules and settings</p>
+                    <div class="command-usage">!automod &lt;setup|list|stats|delete&gt; [options]</div>
+                    <div class="command-aliases">
+                        <span class="command-alias">!am</span>
+                    </div>
+                </div>
+
+                <!-- Fun Commands -->
+                <div class="command-card" data-category="fun">
+                    <div class="command-header">
+                        <span class="command-name">!meme</span>
+                        <span class="command-category">fun</span>
+                    </div>
+                    <p class="command-description">Generate a random meme</p>
+                    <div class="command-usage">!meme [subreddit]</div>
+                    <div class="command-aliases">
+                        <span class="command-alias">!funny</span>
+                    </div>
+                </div>
+
+                <div class="command-card" data-category="fun">
+                    <div class="command-header">
+                        <span class="command-name">!8ball</span>
+                        <span class="command-category">fun</span>
+                    </div>
+                    <p class="command-description">Ask the magic 8-ball a question</p>
+                    <div class="command-usage">!8ball [question]</div>
+                    <div class="command-aliases">
+                        <span class="command-alias">!8b</span>
+                        <span class="command-alias">!ball</span>
+                    </div>
+                </div>
+
+                <div class="command-card" data-category="fun">
+                    <div class="command-header">
+                        <span class="command-name">!trivia</span>
+                        <span class="command-category">fun</span>
+                    </div>
+                    <p class="command-description">Start a trivia game</p>
+                    <div class="command-usage">!trivia [category] [difficulty]</div>
+                    <div class="command-aliases">
+                        <span class="command-alias">!quiz</span>
+                    </div>
+                </div>
+
+                <div class="command-card" data-category="fun">
+                    <div class="command-header">
+                        <span class="command-name">!joke</span>
+                        <span class="command-category">fun</span>
+                    </div>
+                    <p class="command-description">Get a random joke</p>
+                    <div class="command-usage">!joke [category]</div>
+                    <div class="command-aliases">
+                        <span class="command-alias">!funny</span>
+                    </div>
+                </div>
+
+                <!-- Economy Commands -->
+                <div class="command-card" data-category="economy">
+                    <div class="command-header">
+                        <span class="command-name">!work</span>
+                        <span class="command-category">economy</span>
+                    </div>
+                    <p class="command-description">Work to earn coins</p>
+                    <div class="command-usage">!work</div>
+                    <div class="command-aliases">
+                        <span class="command-alias">!job</span>
+                    </div>
+                </div>
+
+                <div class="command-card" data-category="economy">
+                    <div class="command-header">
+                        <span class="command-name">!balance</span>
+                        <span class="command-category">economy</span>
+                    </div>
+                    <p class="command-description">Check your coin balance</p>
+                    <div class="command-usage">!balance [@user]</div>
+                    <div class="command-aliases">
+                        <span class="command-alias">!bal</span>
+                        <span class="command-alias">!money</span>
+                    </div>
+                </div>
+
+                <div class="command-card" data-category="economy">
+                    <div class="command-header">
+                        <span class="command-name">!shop</span>
+                        <span class="command-category">economy</span>
+                    </div>
+                    <p class="command-description">Browse the server shop</p>
+                    <div class="command-usage">!shop [page]</div>
+                    <div class="command-aliases">
+                        <span class="command-alias">!store</span>
+                    </div>
+                </div>
+
+                <div class="command-card" data-category="economy">
+                    <div class="command-header">
+                        <span class="command-name">!gamble</span>
+                        <span class="command-category">economy</span>
+                    </div>
+                    <p class="command-description">Gamble your coins</p>
+                    <div class="command-usage">!gamble &lt;amount&gt;</div>
+                    <div class="command-aliases">
+                        <span class="command-alias">!bet</span>
+                    </div>
+                </div>
+
+                <!-- Music Commands -->
+                <div class="command-card" data-category="music">
+                    <div class="command-header">
+                        <span class="command-name">!play</span>
+                        <span class="command-category">music</span>
+                    </div>
+                    <p class="command-description">Play music from YouTube or Spotify</p>
+                    <div class="command-usage">!play &lt;song/url&gt;</div>
+                    <div class="command-aliases">
+                        <span class="command-alias">!p</span>
+                    </div>
+                </div>
+
+                <div class="command-card" data-category="music">
+                    <div class="command-header">
+                        <span class="command-name">!skip</span>
+                        <span class="command-category">music</span>
+                    </div>
+                    <p class="command-description">Skip the current song</p>
+                    <div class="command-usage">!skip</div>
+                    <div class="command-aliases">
+                        <span class="command-alias">!s</span>
+                        <span class="command-alias">!next</span>
+                    </div>
+                </div>
+
+                <div class="command-card" data-category="music">
+                    <div class="command-header">
+                        <span class="command-name">!queue</span>
+                        <span class="command-category">music</span>
+                    </div>
+                    <p class="command-description">View the music queue</p>
+                    <div class="command-usage">!queue [page]</div>
+                    <div class="command-aliases">
+                        <span class="command-alias">!q</span>
+                    </div>
+                </div>
+
+                <!-- Utility Commands -->
+                <div class="command-card" data-category="utility">
+                    <div class="command-header">
+                        <span class="command-name">!weather</span>
+                        <span class="command-category">utility</span>
+                    </div>
+                    <p class="command-description">Get weather information for a location</p>
+                    <div class="command-usage">!weather &lt;location&gt;</div>
+                    <div class="command-aliases">
+                        <span class="command-alias">!w</span>
+                    </div>
+                </div>
+
+                <div class="command-card" data-category="utility">
+                    <div class="command-header">
+                        <span class="command-name">!translate</span>
+                        <span class="command-category">utility</span>
+                    </div>
+                    <p class="command-description">Translate text to another language</p>
+                    <div class="command-usage">!translate &lt;language&gt; &lt;text&gt;</div>
+                    <div class="command-aliases">
+                        <span class="command-alias">!tr</span>
+                    </div>
+                </div>
+
+                <div class="command-card" data-category="utility">
+                    <div class="command-header">
+                        <span class="command-name">!poll</span>
+                        <span class="command-category">utility</span>
+                    </div>
+                    <p class="command-description">Create a poll with multiple options</p>
+                    <div class="command-usage">!poll "question" "option1" "option2"</div>
+                    <div class="command-aliases">
+                        <span class="command-alias">!vote</span>
+                    </div>
+                </div>
+
+                <div class="command-card" data-category="utility">
+                    <div class="command-header">
+                        <span class="command-name">!remind</span>
+                        <span class="command-category">utility</span>
+                    </div>
+                    <p class="command-description">Set a reminder</p>
+                    <div class="command-usage">!remind &lt;time&gt; &lt;message&gt;</div>
+                    <div class="command-aliases">
+                        <span class="command-alias">!remindme</span>
+                    </div>
+                </div>
+
+                <!-- AI Commands -->
+                <div class="command-card" data-category="ai">
+                    <div class="command-header">
+                        <span class="command-name">!chatgpt</span>
+                        <span class="command-category">ai</span>
+                    </div>
+                    <p class="command-description">Chat with GPT AI</p>
+                    <div class="command-usage">!chatgpt &lt;message&gt;</div>
+                    <div class="command-aliases">
+                        <span class="command-alias">!gpt</span>
+                        <span class="command-alias">!ai</span>
+                    </div>
+                </div>
+
+                <div class="command-card" data-category="ai">
+                    <div class="command-header">
+                        <span class="command-name">!imagine</span>
+                        <span class="command-category">ai</span>
+                    </div>
+                    <p class="command-description">Generate an image from text description</p>
+                    <div class="command-usage">!imagine &lt;description&gt;</div>
+                    <div class="command-aliases">
+                        <span class="command-alias">!image</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Load More Button -->
+            <div class="load-more-container" style="display: none;">
+                <button class="btn btn-secondary" id="load-more-btn">
+                    <i class="fas fa-chevron-down"></i>
+                    Load More Commands
+                </button>
+            </div>
+
+            <!-- No Results -->
+            <div class="empty-state" id="no-results" style="display: none;">
+                <div class="empty-state-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3 class="empty-state-title">No Commands Found</h3>
+                <p class="empty-state-description">
+                    Try adjusting your search or filters to find what you're looking for.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Links -->
+    <section class="quick-links">
+        <div class="container">
+            <div class="section-header">
+                <h2>Need Help?</h2>
+                <p>Get started with these helpful resources</p>
+            </div>
+            
+            <div class="quick-links-grid">
+                <a href="dashboard.html" class="quick-link-card">
+                    <div class="quick-link-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <h3>Server Dashboard</h3>
+                    <p>Configure LyBotic for your server</p>
+                </a>
+                
+                <a href="support.html" class="quick-link-card">
+                    <div class="quick-link-icon">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                    <h3>Get Support</h3>
+                    <p>Need help? Visit our support center</p>
+                </a>
+                
+                <a href="docs.html" class="quick-link-card">
+                    <div class="quick-link-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3>Documentation</h3>
+                    <p>Detailed guides and API reference</p>
+                </a>
+                
+                <a href="command-tester.html" class="quick-link-card">
+                    <div class="quick-link-icon">
+                        <i class="fas fa-terminal"></i>
+                    </div>
+                    <h3>Command Tester</h3>
+                    <p>Test commands before using them</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-brand">
+                        <img src="assets/logo.png" alt="LyBotic Logo" class="footer-logo">
+                        <span class="footer-title">LyBotic</span>
+                    </div>
+                    <p class="footer-description">
+                        The ultimate Discord bot with 540+ commands for complete server management and entertainment.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://discord.gg/your-server" target="_blank"><i class="fab fa-discord"></i></a>
+                        <a href="https://github.com/yourusername" target="_blank"><i class="fab fa-github"></i></a>
+                        <a href="https://twitter.com/yourusername" target="_blank"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul class="footer-links">
+                        <li><a href="commands.html">Commands</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="docs.html">Documentation</a></li>
+                        <li><a href="status.html">Status</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul class="footer-links">
+                        <li><a href="support.html">Help Center</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="https://discord.gg/your-server">Discord</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="security.html">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 LyBotic. All rights reserved.</p>
+                <p>Made with ❤️ for Discord communities</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/commands.js"></script>
+
+    <style>
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: calc(70px + var(--space-3xl)) 0 var(--space-3xl);
+        }
+        
+        .page-title {
+            font-size: 3rem;
+            margin-bottom: var(--space-md);
+            color: white;
+        }
+        
+        .page-description {
+            font-size: 1.125rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+        }
+        
+        .commands-section {
+            padding: var(--space-3xl) 0;
+        }
+        
+        .commands-controls {
+            margin-bottom: var(--space-3xl);
+        }
+        
+        .filter-tabs {
+            margin-top: var(--space-lg);
+        }
+        
+        .commands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: var(--space-lg);
+        }
+        
+        .quick-links {
+            background: var(--background-alt);
+            padding: var(--space-3xl) 0;
+        }
+        
+        .quick-links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-lg);
+        }
+        
+        .quick-link-card {
+            background: var(--surface);
+            padding: var(--space-xl);
+            border-radius: var(--border-radius-xl);
+            text-align: center;
+            text-decoration: none;
+            transition: var(--transition-normal);
+            border: 2px solid transparent;
+        }
+        
+        .quick-link-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-color);
+        }
+        
+        .quick-link-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border-radius: var(--border-radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin: 0 auto var(--space-lg);
+        }
+        
+        .quick-link-card h3 {
+            margin-bottom: var(--space-sm);
+            color: var(--text-primary);
+        }
+        
+        .quick-link-card p {
+            color: var(--text-secondary);
+            margin: 0;
+        }
+        
+        .nav-link.active {
+            color: var(--primary-color);
+        }
+        
+        .load-more-container {
+            text-align: center;
+            margin-top: var(--space-xl);
+        }
+        
+        @media (max-width: 768px) {
+            .tab-list {
+                flex-direction: column;
+                gap: var(--space-sm);
+            }
+            
+            .tab-button {
+                text-align: left;
+                padding: var(--space-md);
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: var(--border-radius-md);
+            }
+            
+            .commands-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</body>
+</html>

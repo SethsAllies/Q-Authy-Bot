@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LyBotic - Ultimate Discord Bot | 540+ Commands</title>
+    <meta name="description" content="LyBotic is the ultimate Discord bot with 540+ commands for moderation, fun, economy, music, and AI features. Includes professional modmail system and AutoMod integration.">
+    <meta name="keywords" content="discord bot, moderation bot, music bot, economy bot, automod, modmail">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="LyBotic - Ultimate Discord Bot">
+    <meta property="og:description" content="540+ commands across 6 categories with AutoMod and professional modmail system">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourusername.github.io/lybotic">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <img src="assets/logo.png" alt="LyBotic Logo" class="nav-logo">
+                <span class="nav-title">LyBotic</span>
+            </div>
+            
+            <div class="nav-menu" id="nav-menu">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a href="commands.html" class="nav-link">Commands</a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="support.html" class="nav-link">Support</a>
+                <a href="docs.html" class="nav-link">Docs</a>
+            </div>
+            
+            <div class="nav-actions">
+                <a href="https://discord.com/oauth2/authorize?client_id=YOUR_BOT_ID&permissions=8&scope=bot%20applications.commands" class="btn btn-primary" target="_blank">
+                    <i class="fab fa-discord"></i> Add to Server
+                </a>
+                <div class="nav-toggle" id="nav-toggle">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-background">
+            <div class="hero-animation"></div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        The Ultimate Discord Bot
+                        <span class="gradient-text">for Everything</span>
+                    </h1>
+                    <p class="hero-description">
+                        540+ commands across 6 categories including moderation, fun, economy, music, AI features, and professional modmail system. Transform your Discord server with LyBotic's comprehensive toolkit.
+                    </p>
+                    
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <span class="stat-number" data-count="540">0</span>
+                            <span class="stat-label">Commands</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number" data-count="4">0</span>
+                            <span class="stat-label">Servers</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number" data-count="6">0</span>
+                            <span class="stat-label">Categories</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">99.9%</span>
+                            <span class="stat-label">Uptime</span>
+                        </div>
+                    </div>
+                    
+                    <div class="hero-actions">
+                        <a href="https://discord.com/oauth2/authorize?client_id=YOUR_BOT_ID&permissions=8&scope=bot%20applications.commands" class="btn btn-primary btn-large" target="_blank">
+                            <i class="fab fa-discord"></i>
+                            Add to Server
+                        </a>
+                        <a href="#features" class="btn btn-secondary btn-large">
+                            <i class="fas fa-play"></i>
+                            Watch Demo
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="hero-visual">
+                    <div class="bot-preview">
+                        <div class="discord-mockup">
+                            <div class="discord-header">
+                                <div class="discord-user">
+                                    <img src="assets/bot-avatar.png" alt="LyBotic Avatar">
+                                    <span>LyBotic#0619</span>
+                                    <span class="bot-tag">BOT</span>
+                                </div>
+                                <div class="status-indicator online"></div>
+                            </div>
+                            <div class="discord-content">
+                                <div class="message">
+                                    <span class="command">!help</span>
+                                    <div class="embed">
+                                        <div class="embed-title">🎮 LyBotic Commands</div>
+                                        <div class="embed-description">Choose a category to explore:</div>
+                                        <div class="embed-buttons">
+                                            <span class="btn-small">🛡️ Moderation</span>
+                                            <span class="btn-small">🎮 Fun</span>
+                                            <span class="btn-small">💰 Economy</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Powerful Features for Every Server</h2>
+                <p class="section-description">
+                    Everything you need to manage, entertain, and grow your Discord community
+                </p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Advanced Moderation</h3>
+                    <p>Complete moderation suite with AutoMod integration, warnings, timeouts, and role management. Keep your server safe and organized.</p>
+                    <ul class="feature-list">
+                        <li>Discord AutoMod Integration</li>
+                        <li>Warning System</li>
+                        <li>Auto Moderation Rules</li>
+                        <li>Role Management</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3>Professional Modmail</h3>
+                    <p>Dedicated ticket system for user support with transcript generation, staff commands, and seamless communication.</p>
+                    <ul class="feature-list">
+                        <li>Thread-based Tickets</li>
+                        <li>Transcript Generation</li>
+                        <li>Staff Management</li>
+                        <li>Multi-server Support</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <h3>Fun & Entertainment</h3>
+                    <p>41 fun commands including games, memes, reactions, and interactive entertainment to keep your community engaged.</p>
+                    <ul class="feature-list">
+                        <li>Interactive Games</li>
+                        <li>Meme Generation</li>
+                        <li>Reaction Commands</li>
+                        <li>Trivia & Quizzes</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <h3>Economy System</h3>
+                    <p>Persistent economy with work, gambling, shop, and inventory systems. Users can earn and spend virtual currency.</p>
+                    <ul class="feature-list">
+                        <li>Persistent Wallets</li>
+                        <li>Work & Gambling</li>
+                        <li>Shop & Inventory</li>
+                        <li>Leaderboards</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <h3>Music Player</h3>
+                    <p>High-quality music playback with queue management, volume control, and seamless audio streaming.</p>
+                    <ul class="feature-list">
+                        <li>Queue Management</li>
+                        <li>Volume Control</li>
+                        <li>Playlist Support</li>
+                        <li>Skip & Resume</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>AI Integration</h3>
+                    <p>ChatGPT integration and AI-powered features for intelligent responses and automated assistance.</p>
+                    <ul class="feature-list">
+                        <li>ChatGPT Integration</li>
+                        <li>Smart Responses</li>
+                        <li>Content Generation</li>
+                        <li>AI Moderation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Commands Preview -->
+    <section class="commands-preview">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Command Categories</h2>
+                <p class="section-description">Explore our comprehensive command library</p>
+            </div>
+            
+            <div class="command-categories">
+                <div class="category-card" data-category="moderation">
+                    <div class="category-icon">🛡️</div>
+                    <h3>Moderation & Admin</h3>
+                    <span class="command-count">17 commands</span>
+                    <p>ban, kick, mute, warnings, automod, roles</p>
+                </div>
+                
+                <div class="category-card" data-category="fun">
+                    <div class="category-icon">🎮</div>
+                    <h3>Fun & Games</h3>
+                    <span class="command-count">41 commands</span>
+                    <p>games, memes, reactions, rates, trivia</p>
+                </div>
+                
+                <div class="category-card" data-category="economy">
+                    <div class="category-icon">💰</div>
+                    <h3>Economy & Levels</h3>
+                    <span class="command-count">13 commands</span>
+                    <p>work, gambling, shop, inventory, wallets</p>
+                </div>
+                
+                <div class="category-card" data-category="music">
+                    <div class="category-icon">🎶</div>
+                    <h3>Music</h3>
+                    <span class="command-count">6 commands</span>
+                    <p>play, pause, queue, volume, skip</p>
+                </div>
+                
+                <div class="category-card" data-category="utility">
+                    <div class="category-icon">🛠️</div>
+                    <h3>Utility</h3>
+                    <span class="command-count">20 commands</span>
+                    <p>weather, translate, reminders, polls</p>
+                </div>
+                
+                <div class="category-card" data-category="ai">
+                    <div class="category-icon">🤖</div>
+                    <h3>AI & Media</h3>
+                    <span class="command-count">2 commands</span>
+                    <p>ChatGPT, image generation</p>
+                </div>
+            </div>
+            
+            <div class="commands-action">
+                <a href="commands.html" class="btn btn-primary">
+                    View All Commands
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Getting Started -->
+    <section class="getting-started">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Get Started in 3 Steps</h2>
+                <p class="section-description">Set up LyBotic in your server in minutes</p>
+            </div>
+            
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Invite the Bot</h3>
+                        <p>Click the invite button and select your server. Grant the necessary permissions for full functionality.</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Basic Setup</h3>
+                        <p>Use <code>!help</code> to explore commands or <code>!automod setup</code> for instant server protection.</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Customize & Enjoy</h3>
+                        <p>Configure settings via the web dashboard and start using the 540+ available commands!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Transform Your Server?</h2>
+                <p>Join thousands of Discord servers already using LyBotic</p>
+                <div class="cta-actions">
+                    <a href="https://discord.com/oauth2/authorize?client_id=YOUR_BOT_ID&permissions=8&scope=bot%20applications.commands" class="btn btn-primary btn-large">
+                        <i class="fab fa-discord"></i>
+                        Add to Server Now
+                    </a>
+                    <a href="https://discord.gg/your-support-server" class="btn btn-secondary btn-large">
+                        <i class="fas fa-comments"></i>
+                        Join Support Server
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-brand">
+                        <img src="assets/logo.png" alt="LyBotic Logo" class="footer-logo">
+                        <span class="footer-title">LyBotic</span>
+                    </div>
+                    <p class="footer-description">
+                        The ultimate Discord bot with 540+ commands for complete server management and entertainment.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://discord.gg/your-server" target="_blank"><i class="fab fa-discord"></i></a>
+                        <a href="https://github.com/yourusername" target="_blank"><i class="fab fa-github"></i></a>
+                        <a href="https://twitter.com/yourusername" target="_blank"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul class="footer-links">
+                        <li><a href="commands.html">Commands</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="docs.html">Documentation</a></li>
+                        <li><a href="status.html">Status</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul class="footer-links">
+                        <li><a href="support.html">Help Center</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="https://discord.gg/your-server">Discord</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="security.html">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 LyBotic. All rights reserved.</p>
+                <p>Made with ❤️ for Discord communities</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/animations.js"></script>
+</body>
+</html>
